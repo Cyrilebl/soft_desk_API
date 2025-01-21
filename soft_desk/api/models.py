@@ -7,13 +7,14 @@ from django.conf import settings
 
 class User(AbstractUser):
     age = models.IntegerField(
-        validators=[MinValueValidator(10), MaxValueValidator(100)]
+        validators=[MinValueValidator(10), MaxValueValidator(100)],
+        default=0,
     )
-    can_be_contacted = models.BooleanField()
-    can_data_be_shared = models.BooleanField()
+    can_be_contacted = models.BooleanField(default=False)
+    can_data_be_shared = models.BooleanField(default=False)
 
 
-class Project(models.model):
+class Project(models.Model):
     BACKEND = "BACKEND"
     FRONTEND = "FRONTEND"
     IOS = "IOS"
@@ -35,7 +36,7 @@ class Project(models.model):
         return self.name
 
 
-class Issue(models.model):
+class Issue(models.Model):
     TODO = "TODO"
     IN_PROGRESS = "IN_PROGRESS"
     FINISHED = "FINISHED"
@@ -73,7 +74,7 @@ class Issue(models.model):
         return f"{self.name} ({self.status})"
 
 
-class Comment(models.model):
+class Comment(models.Model):
     comment_id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     linked_to = models.ForeignKey(to="Issue", on_delete=models.CASCADE)
