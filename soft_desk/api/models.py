@@ -6,9 +6,9 @@ from django.conf import settings
 
 
 class User(AbstractUser):
+    email = models.EmailField(unique=True, blank=False, null=False)
     age = models.IntegerField(
-        validators=[MinValueValidator(10), MaxValueValidator(100)],
-        default=0,
+        validators=[MinValueValidator(10), MaxValueValidator(100)], blank=False
     )
     can_be_contacted = models.BooleanField(default=False)
     can_data_be_shared = models.BooleanField(default=False)
@@ -26,14 +26,24 @@ class Project(models.Model):
         (ANDROID, "Android"),
     )
 
-    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=250, unique=True)
     description = models.TextField()
     type = models.CharField(max_length=8, choices=TYPES_CHOICES)
     created_time = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="projects"
+    )
 
     def __str__(self):
         return self.name
+
+
+class Contributor(models.Model):
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("user", "project")
 
 
 class Issue(models.Model):
@@ -62,24 +72,29 @@ class Issue(models.Model):
         (TASK, "Task"),
     )
 
-    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=250, unique=True)
     description = models.TextField()
     status = models.CharField(max_length=11, choices=STATUS_CHOICES)
     priority = models.CharField(max_length=6, choices=PRIORITY_CHOICES)
     tag = models.CharField(max_length=7, choices=TAG_CHOICES)
     created_time = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        to=Project, on_delete=models.CASCADE, related_name="issues"
+    )
 
     def __str__(self):
         return f"{self.name} ({self.status})"
 
 
 class Comment(models.Model):
-    comment_id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
-    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    linked_to = models.ForeignKey(to="Issue", on_delete=models.CASCADE)
+    id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     description = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    issue = models.ForeignKey(
+        to=Issue, on_delete=models.CASCADE, related_name="comments"
+    )
 
     def __str__(self):
-        return f"Comment by {self.author} on Issue {self.linked_to}"
+        return f"Comment by {self.author} on Issue {self.issue}"
