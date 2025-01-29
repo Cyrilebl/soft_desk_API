@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
+from rest_framework.routers import DefaultRouter
 
 from api.views import (
     UserViewSet,
@@ -10,16 +10,20 @@ from api.views import (
     CommentViewSet,
 )
 
-router = routers.SimpleRouter()
-router.register("users", UserViewSet, basename="user")
-router.register("projects", ProjectViewSet, basename="project")
-router.register("contributors", ContributorViewSet, basename="contributor")
-router.register("issues", IssueViewSet, basename="issue")
-router.register("comments", CommentViewSet, basename="comment")
 
+app_name = "api"
+
+router = DefaultRouter()
+router.register(r"users", UserViewSet, basename="user")
+router.register(r"projects", ProjectViewSet, basename="project")
+router.register(r"contributors", ContributorViewSet, basename="contributor")
+router.register(r"issues", IssueViewSet, basename="issue")
+router.register(r"comments", CommentViewSet, basename="comment")
+
+api_patterns = (router.urls, app_name)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
-    path("api/", include(router.urls)),
+    path("api/", include(api_patterns, namespace=app_name)),
 ]
