@@ -51,9 +51,7 @@ class ContributorViewSet(ModelViewSet):
         Disable PUT / PATCH.
         """
         if self.action in ["update", "partial_update"]:
-            raise MethodNotAllowed(
-                "PUT and PATCH methods are not allowed for contributors."
-            )
+            raise MethodNotAllowed("PUT and PATCH methods are not allowed.")
         return super().get_permissions()
 
     def perform_create(self, serializer):
@@ -81,22 +79,19 @@ class IssueViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         project_id = self.request.data.get("project")
-        try:
-            project = Project.objects.get(id=project_id)
-        except Project.DoesNotExist:
-            raise PermissionDenied("Invalid project ID.")
+        project = Project.objects.get(id=project_id)
+
+        user = self.request.user
 
         if (
-            not Contributor.objects.filter(
-                user=self.request.user, project=project
-            ).exists()
-            and project.author != self.request.user
+            not Contributor.objects.filter(user=user, project=project).exists()
+            and user != project.author
         ):
             raise PermissionDenied(
                 "You must be a contributor or the author of the project to create an issue."
             )
 
-        serializer.save(author=self.request.user)
+        serializer.save(author=user)
 
 
 class CommentViewSet(ModelViewSet):
@@ -105,20 +100,18 @@ class CommentViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         issue_id = self.request.data.get("issue")
-        try:
-            issue = Issue.objects.get(id=issue_id)
-        except Issue.DoesNotExist:
-            raise PermissionDenied("Invalid issue ID.")
+        issue = Issue.objects.get(id=issue_id)
 
+        user = self.request.user
         project = issue.project
         if (
             not Contributor.objects.filter(
                 user=self.request.user, project=project
             ).exists()
-            and project.author != self.request.user
+            and user != project.author
         ):
             raise PermissionDenied(
-                "You must be a contributor or the author of the issue to create an issue."
+                "You must be a contributor or the author of the project to create a comment."
             )
 
         serializer.save(author=self.request.user)
