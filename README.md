@@ -10,22 +10,22 @@ http://127.0.0.1:8000/api/
 
 ### 🟢 Users
 
-| Méthode | Endpoint       | Description                | Authentification requise |
-| ------- | -------------- | -------------------------- | :----------------------: |
-| GET     | `/users/`      | Récupérer ses informations |            ✅            |
-| POST    | `/users/`      | Créer un utilisateur       |            ❌            |
-| PUT     | `/users/{id}/` | Modifier ses informations  |            ✅            |
-| DELETE  | `/users/{id}/` | Supprimer son compte       |            ✅            |
+| Méthode     | Endpoint       | Description                | Authentification requise |
+| ----------- | -------------- | -------------------------- | :----------------------: |
+| GET         | `/users/`      | Récupérer ses informations |            ✅            |
+| POST        | `/users/`      | Créer un utilisateur       |            ❌            |
+| PUT / PATCH | `/users/{id}/` | Modifier ses informations  |            ✅            |
+| DELETE      | `/users/{id}/` | Supprimer son compte       |            ✅            |
 
 ### 🟢 Projects
 
-| Méthode | Endpoint          | Description                | Authentification requise |
-| ------- | ----------------- | -------------------------- | :----------------------: |
-| GET     | `/projects/`      | Lister les projets         |    ✅ <br> _(Auteur)_    |
-| GET     | `/projects/{id}/` | Récupérer un projet par ID |    ✅ <br> _(Auteur)_    |
-| POST    | `/projects/`      | Créer un projet            |    ✅ <br> _(Auteur)_    |
-| PUT     | `/projects/{id}/` | Modifier un projet         |    ✅ <br> _(Auteur)_    |
-| DELETE  | `/projects/{id}/` | Supprimer un projet        |    ✅ <br> _(Auteur)_    |
+| Méthode     | Endpoint          | Description                | Authentification requise |
+| ----------- | ----------------- | -------------------------- | :----------------------: |
+| GET         | `/projects/`      | Lister les projets         |    ✅ <br> _(Auteur)_    |
+| GET         | `/projects/{id}/` | Récupérer un projet par ID |    ✅ <br> _(Auteur)_    |
+| POST        | `/projects/`      | Créer un projet            |    ✅ <br> _(Auteur)_    |
+| PUT / PATCH | `/projects/{id}/` | Modifier un projet         |    ✅ <br> _(Auteur)_    |
+| DELETE      | `/projects/{id}/` | Supprimer un projet        |    ✅ <br> _(Auteur)_    |
 
 ### 🟢 Contributors
 
