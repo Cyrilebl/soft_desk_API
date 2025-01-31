@@ -8,6 +8,7 @@ asgiref = "==3.8.1"
 sqlparse = "==0.5.3"
 django = "*"
 djangorestframework = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
