@@ -48,10 +48,19 @@ class ProjectListSerializer(ModelSerializer):
 class ProjectDetailSerializer(ModelSerializer):
     issues = serializers.SerializerMethodField()
     created_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    author = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Project
-        fields = ["id", "name", "description", "type", "created_time", "issues"]
+        fields = [
+            "id",
+            "name",
+            "description",
+            "type",
+            "author",
+            "created_time",
+            "issues",
+        ]
 
     def get_issues(self, obj):
         issues = obj.issues.all()

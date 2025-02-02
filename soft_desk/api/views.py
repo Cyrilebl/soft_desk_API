@@ -1,8 +1,5 @@
-from rest_framework.exceptions import (
-    ValidationError,
-    PermissionDenied,
-    MethodNotAllowed,
-)
+from django.db.models import Q
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
@@ -13,6 +10,12 @@ from .serializers import (
     ContributorSerializer,
     IssueDetailSerializer,
     CommentDetailSerializer,
+)
+from .permissions import (
+    IsAuthor,
+    IsAuthorOrContributor,
+    IsProjectAuthorOrContributor,
+    IsProjectAuthor,
 )
 
 
@@ -37,6 +40,24 @@ class UserViewSet(ModelViewSet):
 class ProjectViewSet(ModelViewSet):
     serializer_class = ProjectDetailSerializer
     queryset = Project.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        """
+        Every authenticated users can create.
+        Only author and contributors can read.
+        Only author can update/delete.
+        """
+        if self.action in ["list", "retrieve"]:
+            return [IsAuthorOrContributor()]
+        if self.action in ["update", "partial_update", "destroy"]:
+            return [IsAuthor()]
+
+        return super().get_permissions()
+
+    def get_queryset(self):
+        user = self.request.user
+        return Project.objects.filter(author=user)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -45,14 +66,21 @@ class ProjectViewSet(ModelViewSet):
 class ContributorViewSet(ModelViewSet):
     serializer_class = ContributorSerializer
     queryset = Contributor.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    http_method_names = ["get", "post", "delete"]
 
     def get_permissions(self):
         """
-        Disable PUT / PATCH.
+        Only authenticated users and project author can create/read/delete.
         """
-        if self.action in ["update", "partial_update"]:
-            raise MethodNotAllowed("PUT and PATCH methods are not allowed.")
+        if self.action in ["create", "list", "retrieve", "destroy"]:
+            return [IsProjectAuthor()]
         return super().get_permissions()
+
+    def get_queryset(self):
+        user = self.request.user
+        return Contributor.objects.filter(project__author=user)
 
     def perform_create(self, serializer):
         user_id = self.request.data.get("user")
@@ -61,10 +89,6 @@ class ContributorViewSet(ModelViewSet):
         user = User.objects.get(id=user_id)
         project = Project.objects.get(id=project_id)
 
-        if project.author != self.request.user:
-            raise PermissionDenied(
-                "You are not allowed to add contributors to this project."
-            )
         if user == project.author:
             raise ValidationError(
                 ({"user": "The project author cannot add themselves as a contributor."})
@@ -76,6 +100,24 @@ class ContributorViewSet(ModelViewSet):
 class IssueViewSet(ModelViewSet):
     serializer_class = IssueDetailSerializer
     queryset = Issue.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        """
+        Every author or contributor of the project can create/read.
+        Only author can update/delete.
+        """
+        if self.action in ["list", "retrieve"]:
+            return [IsProjectAuthorOrContributor()]
+        if self.action in ["update", "partial_update", "destroy"]:
+            return [IsAuthor()]
+
+        return super().get_permissions()
+
+    def get_queryset(self):
+        user = self.request.user
+        projects = Project.objects.filter(Q(author=user) | Q(contributors__user=user))
+        return Issue.object.filter(project__in=projects)
 
     def perform_create(self, serializer):
         project_id = self.request.data.get("project")
@@ -97,6 +139,24 @@ class IssueViewSet(ModelViewSet):
 class CommentViewSet(ModelViewSet):
     serializer_class = CommentDetailSerializer
     queryset = Comment.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        """
+        Every author or contributor of the project can create/read.
+        Only author can update/delete.
+        """
+        if self.action in ["list", "retrieve"]:
+            return [IsProjectAuthorOrContributor()]
+        if self.action in ["update", "partial_update", "destroy"]:
+            return [IsAuthor()]
+
+        return super().get_permissions()
+
+    def get_queryset(self):
+        user = self.request.user
+        projects = Project.objects.filter(Q(author=user) | Q(contributors__user=user))
+        return Comment.object.filter(project__in=projects)
 
     def perform_create(self, serializer):
         issue_id = self.request.data.get("issue")
