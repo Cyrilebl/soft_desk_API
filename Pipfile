@@ -9,6 +9,7 @@ sqlparse = "==0.5.3"
 django = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
+drf-yasg = "*"
 
 [dev-packages]
 
