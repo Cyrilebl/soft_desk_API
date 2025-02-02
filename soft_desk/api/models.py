@@ -33,6 +33,7 @@ class Project(models.Model):
     author = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="projects"
     )
+    contributors = models.ManyToManyField(User, through="Contributor")
 
     def __str__(self):
         return self.name
