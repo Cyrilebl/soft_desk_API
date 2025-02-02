@@ -1,4 +1,4 @@
-![LITRevu banner](images/soft-desk-banner.png)
+![SoftDesk banner](images/soft-desk-banner.png)
 
 # 📌 Endpoints de l'API
 
@@ -55,12 +55,10 @@ http://127.0.0.1:8000/api/
 | PUT     | `/comments/{id}/` | Modifier un commentaire             |    ✅ <br> _(Auteur)_    |
 | DELETE  | `/comments/{id}/` | Supprimer un commentaire            |    ✅ <br> _(Auteur)_    |
 
-```markdown
-📌 Remarques
+## 📌 _Remarques_
 
-- 🔐 L'authentification Token est requise pour toutes les actions sauf la création d'un utilisateur.
-- 👥 Un utilisateur ne peut voir/modifier que ses propres informations.
-- 🏗️ Les projets sont gérés uniquement par leur créateur (ajout/modif/suppression).
-- 🛠️ Les issues et commentaires sont modifiables uniquement par leur auteur.
-- 👥 Seul les contributeurs d'un projet peuvent interagir avec les issues et commentaires.
-```
+- 🔐 _L'authentification Token est requise pour toutes les actions sauf la création d'un utilisateur._
+- 👥 _Un utilisateur ne peut voir/modifier que ses propres informations._
+- 🏗️ _Les projets sont gérés uniquement par leur créateur (ajout/modif/suppression)._
+- 🛠️ _Les issues et commentaires sont modifiables uniquement par leur auteur._
+- 👥 _Seuls les contributeurs d'un projet peuvent interagir avec les issues et commentaires._
