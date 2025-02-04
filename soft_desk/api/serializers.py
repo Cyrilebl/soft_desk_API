@@ -35,20 +35,17 @@ class UserSerializer(ModelSerializer):
         return serializer.data
 
 
-class ProjectListSerializer(ModelSerializer):
-    detail = serializers.HyperlinkedIdentityField(
-        view_name="api:project-detail", read_only=True
-    )
-
+class ContributorSerializer(ModelSerializer):
     class Meta:
-        model = Project
-        fields = ["id", "name", "detail"]
+        model = Contributor
+        fields = "__all__"
 
 
 class ProjectDetailSerializer(ModelSerializer):
     issues = serializers.SerializerMethodField()
     created_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     author = serializers.StringRelatedField(read_only=True)
+    contributors = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
@@ -58,6 +55,7 @@ class ProjectDetailSerializer(ModelSerializer):
             "description",
             "type",
             "author",
+            "contributors",
             "created_time",
             "issues",
         ]
@@ -70,11 +68,19 @@ class ProjectDetailSerializer(ModelSerializer):
         )
         return serializer.data
 
+    def get_contributors(self, obj):
+        contributors = obj.contributors.all()
+        return [contributor.username for contributor in contributors]
 
-class ContributorSerializer(ModelSerializer):
+
+class ProjectListSerializer(ModelSerializer):
+    detail = serializers.HyperlinkedIdentityField(
+        view_name="api:project-detail", read_only=True
+    )
+
     class Meta:
-        model = Contributor
-        fields = "__all__"
+        model = Project
+        fields = ["id", "name", "detail"]
 
 
 class IssueListSerializer(ModelSerializer):
