@@ -1,67 +1,74 @@
 ![SoftDesk banner](images/soft-desk-banner.png)
 
-# 📌 Endpoints de l'API
+# 📜 API Documentation
+
+This API is documented using Swagger. You can access the interactive documentation at:
+
+- **Swagger UI** : http://127.0.0.1:8000/swagger/
+- **ReDoc** : http://127.0.0.1:8000/redoc/
+
+# 📌 Endpoints
 
 ## 📍 Base URL :
 
 http://127.0.0.1:8000/api/
 
-## 🔑 Authentification : Token
+## 🔑 Authentication : Token
 
-| Méthode | Endpoint          | Description             |
-| ------- | ----------------- | ----------------------- |
-| POST    | `/token/`         | Obtenir un token        |
-| POST    | `/token/refresh/` | Mettre à jour son token |
+| Method | Endpoint          | Description     |
+| ------ | ----------------- | --------------- |
+| POST   | `/token/`         | Obtain a token  |
+| POST   | `/token/refresh/` | Refresh a token |
 
 ### 🟢 Users
 
-| Méthode     | Endpoint       | Description                | Authentification requise |
-| ----------- | -------------- | -------------------------- | :----------------------: |
-| POST        | `/users/`      | Créer un utilisateur       |            ❌            |
-| GET         | `/users/`      | Récupérer ses informations |            ✅            |
-| PUT / PATCH | `/users/{id}/` | Modifier ses informations  |            ✅            |
-| DELETE      | `/users/{id}/` | Supprimer son compte       |            ✅            |
+| Method      | Endpoint       | Description               | Authentication Required |
+| ----------- | -------------- | ------------------------- | :---------------------: |
+| POST        | `/users/`      | Create a user             |           ❌            |
+| GET         | `/users/`      | Retrieve user information |           ✅            |
+| PUT / PATCH | `/users/{id}/` | Update user information   |           ✅            |
+| DELETE      | `/users/{id}/` | Delete user account       |           ✅            |
 
 ### 🟢 Projects
 
-| Méthode     | Endpoint          | Description         |        Autorisation        |
-| ----------- | ----------------- | ------------------- | :------------------------: |
-| POST        | `/projects/`      | Créer un projet     |       _Utilisateur_        |
-| GET         | `/projects/`      | Lister les projets  | _Auteur_<br>_Contributeur_ |
-| GET         | `/projects/{id}/` | Voir un projet      | _Auteur_<br>_Contributeur_ |
-| PUT / PATCH | `/projects/{id}/` | Modifier un projet  |          _Auteur_          |
-| DELETE      | `/projects/{id}/` | Supprimer un projet |          _Auteur_          |
+| Method      | Endpoint          | Description      |       Authorization       |
+| ----------- | ----------------- | ---------------- | :-----------------------: |
+| POST        | `/projects/`      | Create a project |          _User_           |
+| GET         | `/projects/`      | List projects    | _Author_<br>_Contributor_ |
+| GET         | `/projects/{id}/` | View a project   | _Author_<br>_Contributor_ |
+| PUT / PATCH | `/projects/{id}/` | Update a project |         _Author_          |
+| DELETE      | `/projects/{id}/` | Delete a project |         _Author_          |
 
 ### 🟢 Contributors
 
-| Méthode | Endpoint              | Description                          |    Autorisation    |
-| ------- | --------------------- | ------------------------------------ | :----------------: |
-| POST    | `/contributors/`      | Ajouter un contributeur              | _Auteur du projet_ |
-| GET     | `/contributors/`      | Lister les contributeurs d'un projet | _Auteur du projet_ |
-| DELETE  | `/contributors/{id}/` | Supprimer un contributeur            | _Auteur du projet_ |
+| Method | Endpoint              | Description               |  Authorization   |
+| ------ | --------------------- | ------------------------- | :--------------: |
+| POST   | `/contributors/`      | Add a contributor         | _Project Author_ |
+| GET    | `/contributors/`      | List project contributors | _Project Author_ |
+| DELETE | `/contributors/{id}/` | Remove a contributor      | _Project Author_ |
 
 ### 🟢 Issues
 
-| Méthode | Endpoint        | Description                   |             Autorisation             |
-| ------- | --------------- | ----------------------------- | :----------------------------------: |
-| POST    | `/issues/`      | Créer une issue               | _Auteur du projet_<br>_Contributeur_ |
-| GET     | `/issues/`      | Lister les issues d'un projet | _Auteur du projet_<br>_Contributeur_ |
-| GET     | `/issues/{id}/` | Voir une issue                | _Auteur du projet_<br>_Contributeur_ |
-| PUT     | `/issues/{id}/` | Modifier une issue            |               _Auteur_               |
-| DELETE  | `/issues/{id}/` | Supprimer une issue           |               _Auteur_               |
+| Method | Endpoint        | Description         |           Authorization           |
+| ------ | --------------- | ------------------- | :-------------------------------: |
+| POST   | `/issues/`      | Create an issue     | _Project Author_<br>_Contributor_ |
+| GET    | `/issues/`      | List project issues | _Project Author_<br>_Contributor_ |
+| GET    | `/issues/{id}/` | View an issue       | _Project Author_<br>_Contributor_ |
+| PUT    | `/issues/{id}/` | Update an issue     |             _Author_              |
+| DELETE | `/issues/{id}/` | Delete an issue     |             _Author_              |
 
 ### 🟢 Comments
 
-| Méthode | Endpoint          | Description                         |             Autorisation             |
-| ------- | ----------------- | ----------------------------------- | :----------------------------------: |
-| POST    | `/comments/`      | Créer un commentaire                | _Auteur du projet_<br>_Contributeur_ |
-| GET     | `/comments/`      | Lister les commentaires d'une issue | _Auteur du projet_<br>_Contributeur_ |
-| GET     | `/comments/{id}/` | Voir un commentaire                 | _Auteur du projet_<br>_Contributeur_ |
-| PUT     | `/comments/{id}/` | Modifier un commentaire             |               _Auteur_               |
-| DELETE  | `/comments/{id}/` | Supprimer un commentaire            |               _Auteur_               |
+| Method | Endpoint          | Description                |           Authorization           |
+| ------ | ----------------- | -------------------------- | :-------------------------------: |
+| POST   | `/comments/`      | Create a comment           | _Project Author_<br>_Contributor_ |
+| GET    | `/comments/`      | List comments for an issue | _Project Author_<br>_Contributor_ |
+| GET    | `/comments/{id}/` | View a comment             | _Project Author_<br>_Contributor_ |
+| PUT    | `/comments/{id}/` | Update a comment           |             _Author_              |
+| DELETE | `/comments/{id}/` | Delete a comment           |             _Author_              |
 
-## 📌 _Remarques_
+### _Notes_
 
-- 🔐 _L'authentification Token est requise pour toutes les actions._
-- 🛠️ _Les projets, issues et commentaires sont uniquement modifiables par leur auteur._
-- 👥 _Seuls l'auteur ou les contributeurs d'un projet peuvent interagir avec les issues et commentaires._
+- 🔐 _Token authentication is required for all actions._
+- 🛠️ _Projects, Issues, and Comments can only be modified by their author._
+- 👥 _Only the author or contributors of a project can interact with Issues and Comments._
