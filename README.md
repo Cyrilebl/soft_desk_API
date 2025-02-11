@@ -7,6 +7,34 @@ This API is documented using Swagger. You can access the interactive documentati
 - **Swagger UI** : http://127.0.0.1:8000/swagger/
 - **ReDoc** : http://127.0.0.1:8000/redoc/
 
+## Project Initialization
+
+1. Clone the project :
+
+```bash
+git clone https://github.com/Cyrilebl/soft_desk_API.git
+```
+
+2. Create and activate the virtual environment :
+
+```bash
+cd soft_desk_API
+pipenv shell
+```
+
+3. Install dependencies :
+
+```bash
+pipenv install
+```
+
+4. Run the server :
+
+```bash
+cd soft_desk
+python manage.py runserver
+```
+
 # 📌 Endpoints
 
 ## 📍 Base URL :
