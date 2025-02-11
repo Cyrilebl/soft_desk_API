@@ -35,13 +35,13 @@ cd soft_desk
 python manage.py runserver
 ```
 
-# 📌 Endpoints
+## Endpoints
 
-## 📍 Base URL :
+### 📍 Base URL :
 
 http://127.0.0.1:8000/api/
 
-## 🔑 Authentication : Token
+### 🔑 Authentication : Token
 
 | Method | Endpoint          | Description     |
 | ------ | ----------------- | --------------- |
